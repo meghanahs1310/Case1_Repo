@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    IMAGE_NAME = "meghanahs/meghanahs:latest"
+    IMAGE_NAME = "${DOCKER_USER}/myapp"
     MANIFEST_PATH = "manifest_file/k8s"
   }
 
@@ -32,6 +32,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker tag meghanahs/meghanahs "$DOCKER_USER/meghanahs:latest"
             docker push $IMAGE_NAME
           '''
         }
