@@ -1,14 +1,14 @@
 pipeline {
   agent any
   environment {
-    IMAGE_NAME = "bhavani1206/first"
+    IMAGE_NAME = "meghanahs/meghanahs"
     MANIFEST_PATH = "manifest_file/k8s"
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/bhavanigowda987/Case1_Repo'
+        git branch: 'main', url: 'https://github.com/meghanahs1310/Case1_Repo.git'
       }
     }
 
@@ -40,7 +40,7 @@ pipeline {
 
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://13.127.80.68:9000/"
+        SONAR_URL = "http://52.66.157.207:9000/"
       }
       steps {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -105,14 +105,14 @@ pipeline {
   post {
     success {
       echo 'Deployment successful!'
-      mail to: 'bhavanijd51@gmail.com',
+      mail to: 'meghana.hs1400@gmail.com',
            subject: "Jenkins Pipeline Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
            body: "Good news! Jenkins job '${env.JOB_NAME}' (build #${env.BUILD_NUMBER}) completed successfully.\n\nCheck details: ${env.BUILD_URL}"
     }
 
     failure {
       echo 'Deployment failed!'
-      mail to: 'bhavanijd51@gmail.com',
+      mail to: 'meghana.hs1400@gmail.com',
            subject: "Jenkins Pipeline Failure: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
            body: "Oops! Jenkins job '${env.JOB_NAME}' (build #${env.BUILD_NUMBER}) failed.\n\nCheck details: ${env.BUILD_URL}"
     }
