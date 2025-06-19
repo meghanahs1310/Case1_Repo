@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: case1
-        image: bhavani1206/first:latest
+        image: meghanahs/meghanahs:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
