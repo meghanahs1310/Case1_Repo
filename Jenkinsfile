@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    IMAGE_NAME = "meghanahs/meghanahs"
+    IMAGE_NAME = "meghanahs/meghanahs:latest"
     MANIFEST_PATH = "manifest_file/k8s"
   }
 
