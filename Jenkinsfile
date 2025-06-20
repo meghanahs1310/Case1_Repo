@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    IMAGE_NAME = "${DOCKER_USER}/myapp"
+    IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
   }
 
@@ -32,7 +32,6 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker tag meghanahs/meghanahs "$DOCKER_USER/meghanahs:latest"
             docker push $IMAGE_NAME
           '''
         }
@@ -41,7 +40,7 @@ pipeline {
 
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://13.201.192.210:9000/"
+        SONAR_URL = "http://3.108.58.5:9000/"
       }
       steps {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
