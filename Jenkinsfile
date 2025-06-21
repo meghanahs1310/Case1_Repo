@@ -19,8 +19,7 @@ pipeline {
         sh 'mvn clean install'
       }
     }
- stages {
-    stage('Build Docker Image') {
+     stage('Build Docker Image') {
       steps {
         sh 'docker build -t $IMAGE_NAME .'
       }
@@ -40,7 +39,7 @@ pipeline {
         }
       }
     }
-  }
+  
     stage('Static Code Analysis') {
       environment {
         SONAR_URL = "http://65.2.3.174:9000/"
