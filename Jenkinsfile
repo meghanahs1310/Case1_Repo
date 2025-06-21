@@ -28,6 +28,21 @@ pipeline {
         }
       }
     }
+stage('Debug Credentials') {
+    steps {
+        script {
+            def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+                com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials.class,
+                Jenkins.instance,
+                null,
+                null
+            )
+            for (c in creds) {
+                println("Credential ID: " + c.id)
+            }
+        }
+    }
+}
 
     stage('Push to DockerHub') {
       steps {
