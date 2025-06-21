@@ -5,6 +5,7 @@ pipeline {
   environment {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
+    DOCKERHUB_CREDENTIALS = credentials('DOCKERHUB_CREDENTIALS')
   }
 
   stages {
@@ -21,41 +22,25 @@ pipeline {
       }
     }
 
+        stages {
+        stage('Login to Docker') {
+            steps {
+                sh '''
+                    echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
+                '''
+            }
+        }
+    }
+   
     stage('Build and Push Docker Image') {
       steps {
         script {
           sh "docker build -t ${IMAGE_NAME} ."
+          sh "docker push ${IMAGE_NAME}"
         }
       }
     }
-stage('Debug Credentials') {
-    steps {
-        script {
-            def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
-                com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials.class,
-                Jenkins.instance,
-                null,
-                null
-            )
-            for (c in creds) {
-                println("Credential ID: " + c.id)
-            }
-        }
-    }
-}
-
-    stage('Push to DockerHub') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh '''
-            echo "Credentials loaded successfully"
-            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker push $IMAGE_NAME
-          '''
-        }
-      }
-    }
-
+    
     stage('Static Code Analysis') {
       environment {
         SONAR_URL = "http://3.110.107.180:9000/"
