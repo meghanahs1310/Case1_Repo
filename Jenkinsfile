@@ -19,27 +19,21 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-stage('Debug Credential') {
-  steps {
-    withCredentials([usernamePassword(
-      credentialsId: 'DOCKER_HUB_CREDENTIALS',
-      usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR',
-      passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
-      sh '''
-        echo "Resolved username: $DOCKER_HUB_CREDENTIALS_USR"
-        echo "Password (masked): $DOCKER_HUB_CREDENTIALS_PSW"
-      '''
-    }
-  }
-}
-
-    stage('Push to Docker Hub') {
+ stage('Build and Push Docker Image') {
       steps {
         script {
-              echo "Cred ID: ${DOCKER_HUB_CREDENTIALS}"
-          docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
-            docker.image("${IMAGE_NAME}").push()
-          }
+          sh "docker build -t ${IMAGE_NAME} ."
+        }
+      }
+    }
+
+    stage('Push to DockerHub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push $IMAGE_NAME
+          '''
         }
       }
     }
