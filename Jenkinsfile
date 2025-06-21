@@ -7,6 +7,9 @@ pipeline {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
     DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
+    tools {
+    git 'Default'
+}
   }
 
   stages {
