@@ -23,22 +23,14 @@ pipeline {
       }
     }
 
-    stage('Login to Docker') {
-      steps {
-        sh """
-  echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
-"""
-     }
-    }
-
-    stage('Build and Push Docker Image') {
-      steps {
-        script {
-          sh "docker build -t ${IMAGE_NAME} ."
-          sh "docker push ${IMAGE_NAME}"
-        }
-      }
-    }
+  stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        docker.image("${IMAGE_NAME}:latest").push()
+                    }
+                }
+            }
 
     stage('Static Code Analysis') {
       environment {
