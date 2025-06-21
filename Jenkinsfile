@@ -6,7 +6,7 @@ pipeline {
   environment {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
-    DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
+    DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
   }
 
   stages {
@@ -26,7 +26,7 @@ pipeline {
     stage('Push to Docker Hub') {
       steps {
         script {
-          docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
+          docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
             docker.image("${IMAGE_NAME}").push()
           }
         }
