@@ -24,7 +24,14 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-
+stage('Debug Credential') {
+            steps {
+                script {
+                    echo "Resolved username: ${DOCKER_HUB_CREDENTIALS_USR}"
+                    echo "Password (will be masked): ${DOCKER_HUB_CREDENTIALS_PSW}"
+                }
+            }
+        }
     stage('Push to Docker Hub') {
       steps {
         script {
