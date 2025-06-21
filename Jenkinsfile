@@ -1,7 +1,8 @@
 pipeline {
   agent {
-    label ('slave')
+    label('slave')
   }
+
   environment {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
@@ -14,21 +15,22 @@ pipeline {
         git branch: 'main', url: 'https://github.com/meghanahs1310/Case1_Repo.git'
       }
     }
+
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
         sh 'mvn clean install'
       }
     }
-       stage('Login to Docker') {
-            steps {
-                sh '''
-                    echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
-                '''
-            }
-        }
+
+    stage('Login to Docker') {
+      steps {
+        sh '''
+          echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
+        '''
+      }
     }
-   
+
     stage('Build and Push Docker Image') {
       steps {
         script {
@@ -37,7 +39,7 @@ pipeline {
         }
       }
     }
-    
+
     stage('Static Code Analysis') {
       environment {
         SONAR_URL = "http://3.110.107.180:9000/"
@@ -56,9 +58,7 @@ pipeline {
     stage('Deploy to Dev') {
       steps {
         script {
-          sh """
-            kubectl apply -f ${MANIFEST_PATH}/dev/deployment.yaml --namespace=dev
-          """
+          sh "kubectl apply -f ${MANIFEST_PATH}/dev/deployment.yaml --namespace=dev"
         }
       }
     }
@@ -117,3 +117,4 @@ pipeline {
            body: "Oops! Jenkins job '${env.JOB_NAME}' (build #${env.BUILD_NUMBER}) failed.\n\nCheck details: ${env.BUILD_URL}"
     }
   }
+}
