@@ -19,17 +19,20 @@ pipeline {
         sh 'mvn clean install'
       }
     }
- stage('Build and Push Docker Image') {
+ stages {
+    stage('Build Docker Image') {
       steps {
-        script {
-          sh "docker build -t ${IMAGE_NAME} ."
-        }
+        sh 'docker build -t $IMAGE_NAME .'
       }
     }
 
     stage('Push to DockerHub') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        withCredentials([usernamePassword(
+          credentialsId: 'DOCKER_HUB_CREDENTIALS',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
             docker push $IMAGE_NAME
@@ -37,7 +40,7 @@ pipeline {
         }
       }
     }
-
+  }
     stage('Static Code Analysis') {
       environment {
         SONAR_URL = "http://65.2.3.174:9000/"
