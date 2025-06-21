@@ -6,7 +6,7 @@ pipeline {
   environment {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
-    DOCKERHUB_CREDENTIALS = credentials('DOCKERHUB_CREDENTIALS')
+    DOCKERHUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
   }
 
   stages {
