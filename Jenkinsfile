@@ -23,14 +23,15 @@ pipeline {
       }
     }
 
-  stage('Push to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
-                        docker.image("${IMAGE_NAME}:latest").push()
-                    }
-                }
-            }
+    stage('Push to Docker Hub') {
+      steps {
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', "${DOCKERHUB_CREDENTIALS}") {
+            docker.image("${IMAGE_NAME}").push()
+          }
+        }
+      }
+    }
 
     stage('Static Code Analysis') {
       environment {
@@ -70,7 +71,7 @@ pipeline {
       steps {
         script {
           input(
-            message: "Approve deployment to Prod?", 
+            message: "Approve deployment to Prod?",
             parameters: [
               booleanParam(name: 'Proceed', defaultValue: false, description: 'Approve the deployment to Prod')
             ]
@@ -109,5 +110,4 @@ pipeline {
            body: "Oops! Jenkins job '${env.JOB_NAME}' (build #${env.BUILD_NUMBER}) failed.\n\nCheck details: ${env.BUILD_URL}"
     }
   }
-}
 }
