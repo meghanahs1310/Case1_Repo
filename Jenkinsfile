@@ -2,7 +2,7 @@ pipeline {
   agent { label 'slave' }
  
   environment {
-  IMAGE_NAME = "meghanahs/case1:latest"
+  IMAGE_NAME = "meghanahs/case1:1.0"
   MANIFEST_PATH = "manifest_file/k8s"
   DOCKER_HUB_CREDENTIALS = 'DOCKER_HUB_CREDENTIALS'
 }
