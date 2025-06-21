@@ -1,7 +1,6 @@
 pipeline {
-  agent {
-    (slave)
-    }
+  agent { label 'slave' }
+ 
   environment {
   IMAGE_NAME = "meghanahs/case1:latest"
   MANIFEST_PATH = "manifest_file/k8s"
