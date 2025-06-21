@@ -7,12 +7,11 @@ pipeline {
     IMAGE_NAME = "meghanahs/case1:latest"
     MANIFEST_PATH = "manifest_file/k8s"
     DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
-    tools {
+  }  
+  tools {
     git 'Default'
 }
-  }
-
-  stages {
+    stages {
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/meghanahs1310/Case1_Repo.git'
