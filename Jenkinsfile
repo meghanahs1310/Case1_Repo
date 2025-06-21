@@ -4,12 +4,9 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME = "meghanahs/case1:latest"
-    MANIFEST_PATH = "manifest_file/k8s"
-    DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
-  }  
-  tools {
-    git 'Default'
+  IMAGE_NAME = "meghanahs/case1:latest"
+  MANIFEST_PATH = "manifest_file/k8s"
+  DOCKER_HUB_CREDENTIALS = 'DOCKER_HUB_CREDENTIALS'
 }
     stages {
     stage('Checkout') {
@@ -25,13 +22,19 @@ pipeline {
       }
     }
 stage('Debug Credential') {
-            steps {
-                script {
-                    echo "Resolved username: ${DOCKER_HUB_CREDENTIALS_USR}"
-                    echo "Password (will be masked): ${DOCKER_HUB_CREDENTIALS_PSW}"
-                }
-            }
-        }
+  steps {
+    withCredentials([usernamePassword(
+      credentialsId: 'DOCKER_HUB_CREDENTIALS',
+      usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR',
+      passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW')]) {
+      sh '''
+        echo "Resolved username: $DOCKER_HUB_CREDENTIALS_USR"
+        echo "Password (masked): $DOCKER_HUB_CREDENTIALS_PSW"
+      '''
+    }
+  }
+}
+
     stage('Push to Docker Hub') {
       steps {
         script {
