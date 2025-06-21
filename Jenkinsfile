@@ -14,16 +14,13 @@ pipeline {
         git branch: 'main', url: 'https://github.com/meghanahs1310/Case1_Repo.git'
       }
     }
-
     stage('Build and Test') {
       steps {
         sh 'ls -ltr'
         sh 'mvn clean install'
       }
     }
-
-        stages {
-        stage('Login to Docker') {
+       stage('Login to Docker') {
             steps {
                 sh '''
                     echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
